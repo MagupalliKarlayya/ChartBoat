@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { model } from "./mainModule";
 
-function App() {
+const App = () => {
+  const [input, setInput] = useState("");
+  const [response, setResponse] = useState("");
+
+  const handleSubmit = async () => {
+    try {
+      const result = await model.generateContent(input);
+      const text = await result.response.text();
+      setResponse(text);
+    } catch (error) {
+      setResponse("Error fetching response.");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <textarea
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter your prompt"
+      />
+      <button onClick={handleSubmit}>Submit</button>
+      <div>{response}</div>
     </div>
   );
-}
+};
 
 export default App;
